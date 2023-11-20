@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+typedef struct node {
+ char ch;
+ struct node* next;
+} node;
+node* head = NULL;
+char arr[100];
+char postfix[100];
+int j = 0;
+bool isoperand(char temp) {
+ return (temp >= '0' && temp <= '9') ||
+ (temp >= 'A' && temp <= 'Z') ||
+ (temp >= 'a' && temp <= 'z');
+}
+bool isoperator(char temp) {
+ return (temp == '+' || temp == '-' || temp == '*' || temp == '/' || temp == '%');
+}
+int precedence(char temp) {
+ if (temp == '+' || temp == '-')
+ return 1;
+ else if (temp == '*' || temp == '/' || temp == '%')
+ return 2;
+ return 0;
+}
+void operator_stack(char temp) {
+ node* newnode = (node*)malloc(sizeof(node));
+ newnode->ch = temp;
+ newnode->next = head;
+ head = newnode;
+}
+char pop() {
+ char op = head->ch;
+ node* temp = head;
+ head = head->next;
+ free(temp);
+ return op;
+}
+void infix_to_postfix(char arr[], int size) {
+ int i = 0;
+ while (i < size) {
+ if (isoperand(arr[i])) {
+ postfix[j++] = arr[i++];
+ } else if (arr[i] == '(' || head == NULL || head->ch == '(') {
+ operator_stack(arr[i++]);
+ } else if (arr[i] == ')') {
+ while (head != NULL && head->ch != '(') {
+ postfix[j++] = pop();
+ }
+ if (head != NULL && head->ch == '(') {
+ pop(); 
+ i++;
+ }
+ } else if (isoperator(arr[i])) {
+ while (head != NULL && precedence(arr[i]) <= precedence(head->ch)) {
+ postfix[j++] = pop();
+ }
+ operator_stack(arr[i++]);
+ }
+ }
+ while (head != NULL) {
+ postfix[j++] = pop();
+ }
+ postfix[j] = '\0'; 
+}
+int main() {
+ printf("Enter Infix expression : ");
+ scanf("%s", arr);
+ int size = strlen(arr);
+ infix_to_postfix(arr, size);
+ printf("Postfix expression : ");
+ printf("%s\n", postfix);
+ return 0;
+}

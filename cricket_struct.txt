@@ -1,0 +1,495 @@
+#include <stdio.h>
+#include <string.h>
+#define MAX_PLAYERS 100
+struct Player {
+    char name[100];
+    int age;
+    char country[50];
+    char category[20];
+    int odisPlayed;
+    int t20sPlayed;
+    float battingAverage;
+    int wicketsTaken;
+};
+void addPlayer(struct Player players[], int *numPlayers) {
+    if (*numPlayers < MAX_PLAYERS) {
+        struct Player newPlayer;
+
+        printf("Enter player name: ");
+        scanf("%s", newPlayer.name);
+        printf("Enter player age: ");
+        scanf("%d", &newPlayer.age);
+        printf("Enter player country: ");
+        scanf("%s", newPlayer.country);
+        printf("Enter player category (Batsman/Bowler/Wicket keeper/All-rounder): ");
+        scanf("%s", newPlayer.category);
+        printf("Enter number of ODIs played: ");
+        scanf("%d", &newPlayer.odisPlayed);
+        printf("Enter number of T20s played: ");
+        scanf("%d", &newPlayer.t20sPlayed);
+        printf("Enter batting average: ");
+        scanf("%f", &newPlayer.battingAverage);
+        printf("Enter number of wickets taken: ");
+        scanf("%d", &newPlayer.wicketsTaken);
+
+        players[*numPlayers] = newPlayer;
+        (*numPlayers)++;
+        printf("Player added successfully!\n");
+    } else {
+        printf("Maximum number of players reached!\n");
+    }
+}
+void countBatsmenByCountry(struct Player players[], int numPlayers) {
+    char searchCountry[50];
+    int count = 0;
+
+    printf("Enter the country to search for batsmen: ");
+    scanf("%s", searchCountry);
+
+    for (int i = 0; i < numPlayers; i++) {
+        if (strcmp(players[i].category, "Batsman") == 0 && strcmp(players[i].country, searchCountry) == 0) {
+            count++;
+        }
+    }
+
+    printf("Number of batsmen from %s: %d\n", searchCountry, count);
+}
+
+void sortBatsmenByAverage(struct Player players[], int numPlayers) {
+    for (int i = 0; i < numPlayers - 1; i++) {
+        for (int j = 0; j < numPlayers - i - 1; j++) {
+            if (strcmp(players[j].category, "Batsman") == 0 &&
+                strcmp(players[j + 1].category, "Batsman") == 0 &&
+                players[j].battingAverage < players[j + 1].battingAverage) {
+                struct Player temp = players[j];
+                players[j] = players[j + 1];
+                players[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void findBatsmanWithHighestAverage(struct Player players[], int numPlayers) {
+    float highestAverage = -1.0;
+    int index = -1;
+
+    for (int i = 0; i < numPlayers; i++) {
+        if (strcmp(players[i].category, "Batsman") == 0 && players[i].battingAverage > highestAverage) {
+            highestAverage = players[i].battingAverage;
+            index = i;
+        }
+    }
+
+    if (index != -1) {
+        printf("Batsman with the highest average: %s (Average: %.2f)\n", players[index].name, highestAverage);
+    } else {
+        printf("No batsman found!\n");
+    }
+}
+
+
+void countBowlersByCountry(struct Player players[], int numPlayers) {
+    char searchCountry[50];
+    int count = 0;
+
+    printf("Enter the country to search for bowlers: ");
+    scanf("%s", searchCountry);
+
+    for (int i = 0; i < numPlayers; i++) {
+        if ((strcmp(players[i].category, "Bowler") == 0 || strcmp(players[i].category, "All-rounder") == 0) &&
+            strcmp(players[i].country, searchCountry) == 0) {
+            count++;
+        }
+    }
+
+    printf("Number of bowlers from %s: %d\n", searchCountry, count);
+}
+
+void findBowlerWithMaxWickets(struct Player players[], int numPlayers) {
+    int maxWickets = -1;
+    int index = -1;
+
+    for (int i = 0; i < numPlayers; i++) {
+        if ((strcmp(players[i].category, "Bowler") == 0 || strcmp(players[i].category, "All-rounder") == 0) &&
+            players[i].wicketsTaken > maxWickets) {
+            maxWickets = players[i].wicketsTaken;
+            index = i;
+        }
+    }
+
+    if (index != -1) {
+        printf("Bowler with the maximum number of wickets: %s (Wickets: %d)\n", players[index].name, maxWickets);
+    } else {
+        printf("No bowler found!\n");
+    }
+}
+
+void displayPlayerInfo(struct Player players[], int numPlayers, char playerName[]) {
+    int found = 0;
+
+    for (int i = 0; i < numPlayers; i++) {
+        if (strcmp(players[i].name, playerName) == 0) {
+            printf("Player Information:\n");
+            printf("Name: %s\n", players[i].name);
+            printf("Age: %d\n", players[i].age);
+            printf("Country: %s\n", players[i].country);
+            printf("Category: %s\n", players[i].category);
+            printf("Number of ODIs played: %d\n", players[i].odisPlayed);
+            printf("Number of T20s played: %d\n", players[i].t20sPlayed);
+            printf("Batting Average: %.2f\n", players[i].battingAverage);
+            printf("Wickets Taken: %d\n", players[i].wicketsTaken);
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Player not found!\n");
+    }
+}
+
+void deletePlayer(struct Player players[], int *numPlayers, char playerName[]) {
+    int found = 0;
+
+    for (int i = 0; i < *numPlayers; i++) {
+        if (strcmp(players[i].name, playerName) == 0) {
+            // Shift elements to fill the gap left by the deleted player
+            for (int j = i; j < *numPlayers - 1; j++) {
+                players[j] = players[j + 1];
+            }
+            (*numPlayers)--;
+            found = 1;
+            printf("Player '%s' has been deleted.\n", playerName);
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Player not found!\n");
+    }
+}
+
+void modifyPlayer(struct Player players[], int numPlayers, char playerName[]) {
+    int found = 0;
+
+    for (int i = 0; i < numPlayers; i++) {
+        if (strcmp(players[i].name, playerName) == 0) {
+            printf("Enter new player name: ");
+            scanf("%s", players[i].name);
+            printf("Enter new player age: ");
+            scanf("%d", &players[i].age);
+            printf("Enter new player country: ");
+            scanf("%s", players[i].country);
+            printf("Enter new player category (Batsman/Bowler/Wicket keeper/All-rounder): ");
+            scanf("%s", players[i].category);
+            printf("Enter new number of ODIs played: ");
+            scanf("%d", &players[i].odisPlayed);
+            printf("Enter new number of T20s played: ");
+            scanf("%d", &players[i].t20sPlayed);
+            printf("Enter new batting average: ");
+            scanf("%f", &players[i].battingAverage);
+            printf("Enter new number of wickets taken: ");
+            scanf("%d", &players[i].wicketsTaken);
+            found = 1;
+            printf("Player '%s' has been modified.\n", playerName);
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Player not found!\n");
+    }
+}
+
+int main() {
+    struct Player players[MAX_PLAYERS];
+    int numPlayers = 0;
+    int choice;
+    char playerName[100];
+
+    while (1) {
+        printf("\nCricket Player's Display Board\n");
+        printf("1. Add Player\n");
+        printf("2. Number of Batsmen from a Country\n");
+        printf("3. Sort Batsmen by Batting Average\n");
+        printf("4. Batsman with Highest Batting Average\n");
+        printf("5. Number of Bowlers from a Country\n");
+        printf("6. Bowler with Maximum Wickets\n");
+        printf("7. Display Player Information\n");
+        printf("8. Delete Player\n");
+        printf("9. Modify Player\n");
+        printf("10. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                addPlayer(players, &numPlayers);
+                break;
+            case 2:
+                countBatsmenByCountry(players, numPlayers);
+                break;
+            case 3:
+                sortBatsmenByAverage(players, numPlayers);
+                printf("Batsmen sorted by batting average.\n");
+                break;
+            case 4:
+                findBatsmanWithHighestAverage(players, numPlayers);
+                break;
+            case 5:
+                countBowlersByCountry(players, numPlayers);
+                break;
+            case 6:
+                findBowlerWithMaxWickets(players, numPlayers);
+                break;
+            case 7:
+                printf("Enter player name: ");
+                scanf("%s", playerName);
+                displayPlayerInfo(players, numPlayers, playerName);
+                break;
+            case 8:
+                printf("Enter player name to delete: ");
+                scanf("%s", playerName);
+                deletePlayer(players, &numPlayers, playerName);
+                break;
+            case 9:
+                printf("Enter player name to modify: ");
+                scanf("%s", playerName);
+                modifyPlayer(players, numPlayers, playerName);
+                break;
+            case 10:
+                printf("Exiting program.\n");
+                return 0;
+            default:
+                printf("Invalid choice. Please enter a valid option.\n");
+        }
+    }
+
+    return 0;
+}
+
+
+// output--
+
+
+// Cricket Player's Display Board
+// 1. Add Player
+// 2. Number of Batsmen from a Country
+// 3. Sort Batsmen by Batting Average
+// 4. Batsman with Highest Batting Average
+// 5. Number of Bowlers from a Country
+// 6. Bowler with Maximum Wickets
+// 7. Display Player Information
+// 8. Delete Player
+// 9. Modify Player
+// 10. Exit
+// Enter your choice: 1
+// Enter player name: virat
+// Enter player age: 35
+// Enter player country: india
+// Enter player category (Batsman/Bowler/Wicket keeper/All-rounder): Batsman
+// Enter number of ODIs played: 250
+// Enter number of T20s played: 100
+// Enter batting average: 50
+// Enter number of wickets taken: 55
+// Player added successfully!
+
+// Cricket Player's Display Board
+// 1. Add Player
+// 2. Number of Batsmen from a Country
+// 3. Sort Batsmen by Batting Average
+// 4. Batsman with Highest Batting Average
+// 5. Number of Bowlers from a Country
+// 6. Bowler with Maximum Wickets
+// 7. Display Player Information
+// 8. Delete Player
+// 9. Modify Player
+// 10. Exit
+// Enter your choice: 1
+// Enter player name: rohit
+// Enter player age: 34
+// Enter player country: india
+// Enter player category (Batsman/Bowler/Wicket keeper/All-rounder): Batsman
+// Enter number of ODIs played: 200
+// Enter number of T20s played: 110
+// Enter batting average: 40
+// Enter number of wickets taken: 65
+// Player added successfully!
+
+// Cricket Player's Display Board
+// 1. Add Player
+// 2. Number of Batsmen from a Country
+// 3. Sort Batsmen by Batting Average
+// 4. Batsman with Highest Batting Average
+// 5. Number of Bowlers from a Country
+// 6. Bowler with Maximum Wickets
+// 7. Display Player Information
+// 8. Delete Player
+// 9. Modify Player
+// 10. Exit
+// Enter your choice: 1
+// Enter player name: shami
+// Enter player age: 30
+// Enter player country: india
+// Enter player category (Batsman/Bowler/Wicket keeper/All-rounder): Bowler
+// Enter number of ODIs played: 95
+// Enter number of T20s played: 45
+// Enter batting average: 15
+// Enter number of wickets taken: 250
+// Player added successfully!
+
+// Cricket Player's Display Board
+// 1. Add Player
+// 2. Number of Batsmen from a Country
+// 3. Sort Batsmen by Batting Average
+// 4. Batsman with Highest Batting Average
+// 5. Number of Bowlers from a Country
+// 6. Bowler with Maximum Wickets
+// 7. Display Player Information
+// 8. Delete Player
+// 9. Modify Player
+// 10. Exit
+// Enter your choice: 1
+// Enter player name: siraj
+// Enter player age: 28
+// Enter player country: india
+// Enter player category (Batsman/Bowler/Wicket keeper/All-rounder): Bowler
+// Enter number of ODIs played: 45
+// Enter number of T20s played: 25
+// Enter batting average: 12
+// Enter number of wickets taken: 150
+// Player added successfully!
+
+// Cricket Player's Display Board
+// 1. Add Player
+// 2. Number of Batsmen from a Country
+// 3. Sort Batsmen by Batting Average
+// 4. Batsman with Highest Batting Average
+// 5. Number of Bowlers from a Country
+// 6. Bowler with Maximum Wickets
+// 7. Display Player Information
+// 8. Delete Player
+// 9. Modify Player
+// 10. Exit
+// Enter your choice: 2
+// Enter the country to search for batsmen: india
+// Number of batsmen from india: 2
+
+// Cricket Player's Display Board
+// 1. Add Player
+// 2. Number of Batsmen from a Country
+// 3. Sort Batsmen by Batting Average
+// 4. Batsman with Highest Batting Average
+// 5. Number of Bowlers from a Country
+// 6. Bowler with Maximum Wickets
+// 7. Display Player Information
+// 8. Delete Player
+// 9. Modify Player
+// 10. Exit
+// Enter your choice: 4
+// Batsman with the highest average: virat (Average: 50.00)
+
+// Cricket Player's Display Board
+// 1. Add Player
+// 2. Number of Batsmen from a Country
+// 3. Sort Batsmen by Batting Average
+// 4. Batsman with Highest Batting Average
+// 5. Number of Bowlers from a Country
+// 6. Bowler with Maximum Wickets
+// 7. Display Player Information
+// 8. Delete Player
+// 9. Modify Player
+// 10. Exit
+// Enter your choice: 5
+// Enter the country to search for bowlers: india
+// Number of bowlers from india: 2
+
+// Cricket Player's Display Board
+// 1. Add Player
+// 2. Number of Batsmen from a Country
+// 3. Sort Batsmen by Batting Average
+// 4. Batsman with Highest Batting Average
+// 5. Number of Bowlers from a Country
+// 6. Bowler with Maximum Wickets
+// 7. Display Player Information
+// 8. Delete Player
+// 9. Modify Player
+// 10. Exit
+// Enter your choice: 6
+// Bowler with the maximum number of wickets: shami (Wickets: 250)
+
+// Cricket Player's Display Board
+// 1. Add Player
+// 2. Number of Batsmen from a Country
+// 3. Sort Batsmen by Batting Average
+// 4. Batsman with Highest Batting Average
+// 5. Number of Bowlers from a Country
+// 6. Bowler with Maximum Wickets
+// 7. Display Player Information
+// 8. Delete Player
+// 9. Modify Player
+// 10. Exit
+// Enter your choice: 7
+// Enter player name: rohit
+// Player Information:
+// Name: rohit
+// Age: 34
+// Country: india
+// Category: Batsman
+// Number of ODIs played: 200
+// Number of T20s played: 110
+// Batting Average: 40.00
+// Wickets Taken: 65
+
+// Cricket Player's Display Board
+// 1. Add Player
+// 2. Number of Batsmen from a Country
+// 3. Sort Batsmen by Batting Average
+// 4. Batsman with Highest Batting Average
+// 5. Number of Bowlers from a Country
+// 6. Bowler with Maximum Wickets
+// 7. Display Player Information
+// 8. Delete Player
+// 9. Modify Player
+// 10. Exit
+// Enter your choice: 8
+// Enter player name to delete: siraj
+// Player 'siraj' has been deleted.
+
+// Cricket Player's Display Board
+// 1. Add Player
+// 2. Number of Batsmen from a Country
+// 3. Sort Batsmen by Batting Average
+// 4. Batsman with Highest Batting Average
+// 5. Number of Bowlers from a Country
+// 6. Bowler with Maximum Wickets
+// 7. Display Player Information
+// 8. Delete Player
+// 9. Modify Player
+// 10. Exit
+// Enter your choice: 9
+// Enter player name to modify: virat
+// Enter new player name: shubman
+// Enter new player age: 26
+// Enter new player country: india
+// Enter new player category (Batsman/Bowler/Wicket keeper/All-rounder): Batsman
+// Enter new number of ODIs played: 35
+// Enter new number of T20s played: 15
+// Enter new batting average: 60
+// Enter new number of wickets taken: 10
+// Player 'virat' has been modified.
+
+// Cricket Player's Display Board
+// 1. Add Player
+// 2. Number of Batsmen from a Country
+// 3. Sort Batsmen by Batting Average
+// 4. Batsman with Highest Batting Average
+// 5. Number of Bowlers from a Country
+// 6. Bowler with Maximum Wickets
+// 7. Display Player Information
+// 8. Delete Player
+// 9. Modify Player
+// 10. Exit
+// Enter your choice: 10
+// Exiting program.
+

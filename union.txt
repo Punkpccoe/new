@@ -1,0 +1,184 @@
+code--
+
+#include<stdio.h>
+int ismember(int a[],int size,int roll){
+    int r=0;
+    for(int k=0;k<size;k++){
+        if(a[k]==roll){
+            r=1;
+            break;
+        }
+    }
+    return r;
+}
+void printarray(int a[],int size){
+    for(int m=0;m<size;m++){
+        printf("%d\t",a[m]);
+    }
+    printf("\n");
+}
+int main(){
+    int a,b,i,j,option;
+    printf("Enter No.of students Opted Block ChainTechnology : ");
+    scanf("%d",&a);
+    printf("Enter No.of students Opted Devops : ");
+    scanf("%d",&b);
+    int arra[100];
+    int arrb[100];
+    printf("Block Chain Technology: \n");
+    for(i=0;i<a;i++){
+        printf("Enter Rollno. of Student %d : ",i+1);
+        scanf("%d",&arra[i]);
+    }
+    printf("Devops: \n");
+    for(i=0;i<b;i++){
+        printf("Enter Rollno. of Student %d : ",i+1);
+        scanf("%d",&arrb[i]);
+    }
+    int arrc[100];
+    int arrd[100];
+    int arre[100];
+    int arrf[100];
+    int arrg[100];
+    //union
+    int sizeunion=0;
+    for(i=0;i<a;i++){
+       arrc[i]=arra[i]; 
+       sizeunion++;
+    }
+        for ( i = 0; i < b; i++) {
+        int isDuplicate = 0;
+        for ( j = 0; j < a; j++) {
+            if (arrb[i] == arra[j]) {
+                isDuplicate = 1;
+                break;
+            }
+        }
+        if (!isDuplicate) {
+            arrc[sizeunion] = arrb[i];
+            sizeunion++;
+        }
+    }
+    //intersection
+    int sizeinter=0;
+    int w;
+    for(i=0;i<a;i++){
+        w=ismember(arrb,b,arra[i]);
+        if(w){
+            arrd[sizeinter]=arra[i];
+            sizeinter++;
+        }
+        }
+    //only a
+    int sizea=0;
+    for(i=0;i<a;i++){
+        w=ismember(arrb,b,arra[i]);
+        if(!w){
+            arre[sizea]=arra[i];
+            sizea++;
+        }
+    }
+    //only b
+    int sizeb=0;
+    for(i=0;i<b;i++){
+        w=ismember(arra,a,arrb[i]);
+        if(!w){
+            arrf[sizeb]=arrb[i];
+            sizeb++;
+        }
+    }
+    //only one
+    int sizeg=0;
+    
+    for(i=0;i<sizea;i++){
+        arrg[sizeg]=arre[i];
+        sizeg++;
+    }
+    for(i=0;i<sizeb;i++){
+        arrg[sizeg]=arrf[i];
+        sizeg++;
+    }
+    do{
+       printf("List all students of all Elective : 1\nList Students who opted both : 2\nList Students who opted only BlockChain Technology : 3\nList Students who opted only one Subject : 4\nExit : 5\n");
+       scanf("%d",&option);
+       switch (option){
+            case 1:
+            printf("all students : \n");
+            printarray(arrc,sizeunion);
+            break;
+        case 2:
+            printf("\nStudents who opted both : ");
+            printarray(arrd,sizeinter);
+            break;
+        case 3:
+            printf("\nStudents who opted only BlockChain Technology : ");
+            printarray(arre,sizea);
+            break;
+        case 4:
+            printf("\nStudents who opted only one Subject : ");
+            printarray(arrg,sizeg);
+            break;
+        case 5:
+            printf("\nExit ");
+            break;
+        default:
+            printf("Invalid choice.\n");
+       }
+    }while(option!=5);
+return 0;
+    
+}
+
+output--
+
+/tmp/Y5ITlmGwKQ.o
+Enter No.of students Opted Block ChainTechnology : 5
+Enter No.of students Opted Devops : 5
+Block Chain Technology: 
+Enter Rollno. of Student 1 : 1
+Enter Rollno. of Student 2 : 2
+Enter Rollno. of Student 3 : 3
+Enter Rollno. of Student 4 : 4
+Enter Rollno. of Student 5 : 5
+Devops: 
+Enter Rollno. of Student 1 : 4
+Enter Rollno. of Student 2 : 5
+Enter Rollno. of Student 3 : 6
+Enter Rollno. of Student 4 : 7
+Enter Rollno. of Student 5 : 8
+List all students of all Elective : 1
+List Students who opted both : 2
+List Students who opted only BlockChain Technology : 3
+List Students who opted only one Subject : 4
+Exit : 5
+1
+all students : 
+1	2	3	4	5	6	7	8	
+List all students of all Elective : 1
+List Students who opted both : 2
+List Students who opted only BlockChain Technology : 3
+List Students who opted only one Subject : 4
+Exit : 5
+2
+Students who opted both : 4	5	
+List all students of all Elective : 1
+List Students who opted both : 2
+List Students who opted only BlockChain Technology : 3
+List Students who opted only one Subject : 4
+Exit : 5
+3
+Students who opted only BlockChain Technology : 1	2	3	
+List all students of all Elective : 1
+List Students who opted both : 2
+List Students who opted only BlockChain Technology : 3
+List Students who opted only one Subject : 4
+Exit : 5
+4
+Students who opted only one Subject : 1	2	3	6	7	8	
+List all students of all Elective : 1
+List Students who opted both : 2
+List Students who opted only BlockChain Technology : 3
+List Students who opted only one Subject : 4
+Exit : 5
+5
+Exit 

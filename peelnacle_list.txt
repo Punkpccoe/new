@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Problem Statement: Department of Information Technology has a student's club named
+// 'Pinnacle Club'. Students of the Second, third and final year of the department can be granted
+// membership on request. Similarly, one may cancel the membership of the club. The first node is
+// reserved for the president of the club and the last node is reserved for the secretary of the club.
+// Write C program to maintain club member’s information using a singly linked list. Store student
+// PRN and Name. Write functions to
+// a) Add and delete the members as well as the president or even secretary.
+// b) Compute the total number of members of the club
+// c) Display members of the club
+// Display list in reverse order using recursion
+struct clubnode
+{
+    char prn[30];
+    char name[30];
+    int ispre;
+    int issec;
+    struct clubnode *next;
+};
+// Global pointers to the president and secretary nodes
+struct ClubMember* president = NULL;
+struct ClubMember* secretary = NULL;
+void addmember(struct clubnode **head,char prn[],char name[],int ispre,int issec)
+{ 
+    struct clubnode* newmember = (struct clubnode*)malloc(sizeof(struct clubnode));
+    strcpy(newmember->prn, prn);
+    strcpy(newmember->name, name);
+    newmember->ispre = ispre;
+    newmember->issec = issec;
+    if (isPresident) {
+        newMember->next = *head;
+        *head = newMember;
+    } else if (isSecretary) {
+        newMember->next = NULL;
+        if (*head == NULL) {
+            *head = newMember;
+        } else {
+            struct ClubMember* current = *head;
+            while (current->next != NULL) {
+                current = current->next;
+            }
+            current->next = newMember;
+        }
+    } else {
+        // Check if there's an existing president and secretary
+        if (*head == NULL) {
+            printf("Error: President must be added first.\n");
+            free(newMember);
+            return;
+        }
+        
+        // Add the regular member after the president
+        newMember->next = (*head)->next;
+        (*head)->next = newMember;
+    }
+}
+
+void deletemember(struct clubnode ** head,char prn[])
+{
+
+}
+
+
+int main()
+{ int choice;
+char prn[30],name[30];
+while(1)
+{
+    printf("\n1. Add Member\n2. Delete Member\n3. Count Members\n4. Display Members\n5. Display Members in Reverse Order\n6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice)
+        {
+            case 1:
+            //add member
+            printf("Enter the prn \n");
+            scanf("%s",prn);
+            printf("enter the name\n");
+            scanf("%s",name);
+            printf("1 for president and 0 for securuit\n");
+            int ispre,issec;
+            scanf("%d %d",&ispre,&issec);
+            addmember(*president,prn,name,ispre,issec);
+
+            case 2:
+            printf("enter the prn\n");
+            scaf("%s",prn);
+            deletemember(*president,prn)
+
+        } 
+}
+  
+}

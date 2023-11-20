@@ -1,0 +1,228 @@
+
+#include <stdio.h>
+
+int queueCir[1000],head = 0, tail = 0, size=0, n;
+
+void enqueue(int data){
+    if(size==n){
+        printf("Now Queue is full you can't do enqueue operation\n");
+        return;
+    }
+    if(tail==n){
+        tail = 0;
+    }
+    queueCir[tail] = data;
+    tail++;
+    size++;
+}
+
+void dequeue(){
+    if(size==0){
+        printf("First Enter value in the Queue \n");
+        return ;
+    }
+    if(head==n){
+        head = 0;
+    }
+    head++;
+    size--;
+    if(size==0)head = 0, tail = 0;
+}
+
+void printQueue(){
+    if(size == 0)printf("Queue is empty\n");
+    if(head < tail){
+        for(int i=head; i<tail; i++)printf("%d ", queueCir[i], i);
+    }else {
+        for(int i=head; i<n; i++)printf("%d ", queueCir[i]);
+        for(int i=0; i<tail; i++)printf("%d ", queueCir[i]);
+    }
+}
+
+int main(){
+    printf("Enter the size of the array : ");
+    scanf("%d", &n);
+    int opinion=1;
+    while(opinion!=-1){
+        printf("Enter 1 to enqueue the data :\n");
+        printf("Enter 2 to dequeue the data :\n");
+        printf("Enter 3 to display the data :\n");
+        printf("Enter -1 exit :\n");
+        scanf("%d", &opinion);
+        if(opinion==1){
+            int data;
+            printf("Enter the data to be inserted : ");
+            scanf("%d", &data);
+            enqueue(data);
+        }else if(opinion==2){
+            dequeue();
+        }else if(opinion==3){
+            printQueue();
+            printf("\n");
+        }
+        printf("===========================================\n");
+        printf("===========================================\n");
+    }
+    return 0;
+}
+
+//OUTPUT
+
+
+PS D:\second_year\Tree_revision> cd "d:\second_year\Tree_revision\" ; 
+if ($?) { gcc circularLLUsingArray.c -o circularLLUsingArray } ; if ($?) { .\circularLLUsingArray }
+Enter the size of the array : 4
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+1
+Enter the data to be inserted : 1
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+1
+Enter the data to be inserted : 2
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+1
+Enter the data to be inserted : 3
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+1
+Enter the data to be inserted : 4
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+1
+Enter the data to be inserted : 5
+Now Queue is full you can't do enqueue operation
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+3
+1 2 3 4 
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+2
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+3
+2 3 4 
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+1
+Enter the data to be inserted : 5
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+3
+2 3 4 5
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+2
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+1
+Enter the data to be inserted : 6
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+3
+3 4 5 6
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+2
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+2
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+2
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+2
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+2
+First Enter value in the Queue
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+3
+Queue is empty
+5 6 3 4
+===========================================
+===========================================
+Enter 1 to enqueue the data :
+Enter 2 to dequeue the data :
+Enter 3 to display the data :
+Enter -1 exit :
+-1
+===========================================

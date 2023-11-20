@@ -1,0 +1,107 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+struct queue{
+	char name[20];
+	int priority;
+	struct queue * next ;
+};
+
+struct queue *front = NULL ;
+struct queue *rear = NULL;
+struct queue *temp = NULL;
+struct queue *pre = NULL;
+char dequeued_patient[20];
+
+void Enqueue(char name[],int priority){
+	struct queue * newnode ;
+	newnode = (struct queue*)malloc(sizeof(struct queue));
+	
+	if(newnode == NULL){
+	 	printf("QUEUE IS FULL!!\n");
+	 	return ;
+	 }
+
+	strcpy(newnode->name,name);
+	newnode->priority = priority;
+	newnode->next = NULL;
+	if(rear == NULL){
+		newnode->next = NULL;
+		front = newnode;
+		rear = newnode;
+	}
+	else if(front->priority > newnode->priority){
+		newnode->next = front;
+		front = newnode;
+	}
+	else{
+		temp = front;
+		while(temp != NULL && temp->priority <= newnode->priority){
+			pre = temp;
+			temp = temp->next;				
+		}
+		pre->next = newnode;
+		newnode->next = temp;
+
+		if(newnode->next == NULL) rear = newnode;
+	} 
+}
+
+void Dequeue(){
+	if(front == NULL) printf("QUEUE IS EMPTY!!\n");
+
+	else{
+		strcpy(dequeued_patient,front->name);
+		temp = front ;
+		front = front->next;
+		free(temp);
+		printf("Dequeued patient: %s",dequeued_patient);
+		return;
+	}	
+}
+
+void display(){
+	 temp = front;
+	 if(front == NULL) printf("QUEUE IS EMPTY!!\n");
+	 else{
+	 	printf("Queue:\n ");
+	 	while(temp != NULL){
+	 		printf("NAME: %s\n",temp->name);
+			printf("Priority: %d\n",temp->priority);
+	 		temp = temp->next;
+	 	}
+	 }	
+}
+
+int main(){
+	char flag;
+	int choice,priority;
+	char name[20];
+
+	do{
+		printf("\nenter choice:\n1.Enqueue\n2.Dequeue\n3.display\n");
+		scanf("%d",&choice);
+			
+			switch(choice){
+				case 1: 
+					printf("Enter name: ");
+					scanf(" %s",name);
+					printf("Enter priority:\n1.Serious\n2.Medium illness\n3.General\n");
+					scanf(" %d",&priority);
+					Enqueue(name,priority);
+					break;
+				case 2:
+					Dequeue();
+					break;
+				case 3: 
+					display();
+					break;
+				default: 
+					printf("INVALID INPUT!!\n");
+					break;			
+			}
+
+		printf("\ndo you want to continue: ");
+		scanf(" %c",&flag);
+	}while(flag == 'y' || flag == 'Y'); 	
+}
